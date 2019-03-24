@@ -1,0 +1,2 @@
+add_executable(Thread_test Thread_test.cc)
+target_link_libraries(Thread_test NetLib_base)

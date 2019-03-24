@@ -1,0 +1,11 @@
+add_executable(EventLoop_test EventLoop_test.cc)
+target_link_libraries(EventLoop_test NetLib_net)
+
+add_executable(EventLoopThread_test EventLoopThread_test.cc)
+target_link_libraries(EventLoopThread_test NetLib_net)
+
+add_executable(EventLoopThreadPool_test EventLoopThreadPool_test.cc)
+target_link_libraries(EventLoopThreadPool_test NetLib_net)
+
+add_executable(TcpServer_test TcpServer_test.cc)
+target_link_libraries(TcpServer_test NetLib_net)

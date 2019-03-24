@@ -1,0 +1,11 @@
+add_executable(LogFile_test LogFile_test.cc)
+target_link_libraries(LogFile_test NetLib_log)
+
+add_executable(AsyncLogging_test AsyncLogging_test.cc)
+target_link_libraries(AsyncLogging_test NetLib_log NetLib_base)
+
+add_executable(Logger_test Logger_test.cc)
+target_link_libraries(Logger_test NetLib_log)
+
+add_executable(LogStream_test LogStream_test.cc)
+target_link_libraries(LogStream_test NetLib_log)
