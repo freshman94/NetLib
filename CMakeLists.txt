@@ -37,5 +37,5 @@ add_subdirectory(src/log/tests)
 add_subdirectory(src/net/tests)
 add_subdirectory(src/http)
 
-	
+add_subdirectory(bench/pingpong)
 	
