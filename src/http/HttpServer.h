@@ -9,7 +9,7 @@ class HttpServer : noncopyable{
   typedef std::function<void(const HttpRequest&, HttpResponse*)> HttpCallback;
 
   HttpServer(EventLoop* loop, const InetAddress& listenAddr,
-	  int numThreads = 0, const string& nameArg = string());
+	  const string& nameArg = string(), int numThreads = 0);
 
   EventLoop* getLoop() const { return server_.getLoop(); }
   void setHttpCallback(const HttpCallback& cb){ httpCallback_ = cb;}

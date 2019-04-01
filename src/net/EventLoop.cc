@@ -45,6 +45,7 @@ EventLoop::EventLoop()
 	callingPendingFunctors_(false),
 	threadId_(CurrentThread::tid()),
 	epoll_(new Epoll(this)),
+	timerQueue_(new TimerQueue(this)),
 	wakeupFd_(createEventfd()),
 	wakeupChannel_(new Channel(this, wakeupFd_)),
 	currentActiveChannel_(NULL)
@@ -132,6 +133,24 @@ void EventLoop::queueInLoop(Functor cb)
 size_t EventLoop::queueSize() const{
 	MutexLockGuard lock(mutex_);
 	return pendingFunctors_.size();
+}
+
+
+void EventLoop::runAt(Timestamp time, TimerCallback cb)
+{
+	timerQueue_->addTimer(std::move(cb), time, 0.0);
+}
+
+void EventLoop::runAfter(double delay, TimerCallback cb)
+{
+	Timestamp time(addTime(Timestamp::now(), delay));
+	runAt(time, std::move(cb));
+}
+
+void EventLoop::runEvery(double interval, TimerCallback cb)
+{
+	Timestamp time(addTime(Timestamp::now(), interval));
+	timerQueue_->addTimer(std::move(cb), time, interval);
 }
 
 void EventLoop::updateChannel(Channel* channel){

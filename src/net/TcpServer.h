@@ -16,14 +16,14 @@ public:
 	typedef std::function<void(int sockfd, const InetAddress&)> NewConnectionCallback;
 
 	TcpServer(EventLoop* loop,const InetAddress& listenAddr,
-		int numThreads = 0, const string& nameArg = string());
+		const string& nameArg = string(), int numThreads = 0);
 	~TcpServer();
 
 	const string& ipPort() const { return ipPort_; }
 	const string& name() const { return name_; }
 	EventLoop* getLoop() const { return loop_; }
 
-	void setConnEstabedCallback(const Callback& cb) { connEstabedCallback_ = cb; }
+	void setConnectionCallback(const Callback& cb) { connectionCallback_ = cb; }
 	void setNewConnectionCallback(const NewConnectionCallback& cb){ newConnectionCallback_ = cb;}
 	void setMessageCallback(const MessageCallback& cb) { messageCallback_ = cb; }
 
@@ -31,7 +31,7 @@ public:
 	void start();
 
 private:
-	void ReadCallback();
+	void handleRead();
 	void listen();
 	void newConnection(int sockfd, const InetAddress& peerAddr);
 	void removeConnection(const TcpConnectionPtr& conn);
@@ -46,7 +46,7 @@ private:
 	Socket listenSocket_;
 	Channel listenChannel_;
 	std::shared_ptr<EventLoopThreadPool> threadPool_;
-	Callback connEstabedCallback_;
+	Callback connectionCallback_;
 	NewConnectionCallback newConnectionCallback_;
 	MessageCallback messageCallback_;
 	ConnectionMap connections_;

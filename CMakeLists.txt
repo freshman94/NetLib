@@ -32,7 +32,7 @@ foreach(SUB_DIR ${SRC_LIST})
 endforeach()
 
 
-
+add_subdirectory(src/base/tests)
 add_subdirectory(src/log/tests)
 add_subdirectory(src/net/tests)
 add_subdirectory(src/http)

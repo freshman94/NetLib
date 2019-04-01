@@ -39,14 +39,15 @@ public:
 	void send(Buffer* message);
 
 	void shutdown(); 
+	void forceClose();
 	void setTcpNoDelay(bool on);
 
 	void setContext(const boost::any& context){ context_ = context;}
 	const boost::any& getContext() const{ return context_;}
 	boost::any* getMutableContext(){ return &context_;}
 
-	void setConnEstabedCallback(const Callback& cb){ connEstabedCallback_ = cb;}
-	void setConnClosedCallback(const Callback& cb) { connClosedCallback_ = cb;}
+	void setConnectionCallback(const Callback& cb){ connectionCallback_ = cb;}
+	void setCloseCallback(const Callback& cb) { closeCallback_ = cb; }
 	void setMessageCallback(const MessageCallback& cb){ messageCallback_ = cb;}
 
 	Buffer* inputBuffer(){ return &inputBuffer_;}
@@ -61,8 +62,10 @@ private:
 	void handleWrite();
 	void handleClose();
 	void handleError();
+	void forceCloseInLoop();
 
 	void setState(StateE s) { state_ = s; }
+	const char* stateToString() const;
 	void shutdownInLoop();
 	void sendInLoop(const StringPiece& message);
 	void sendInLoop(const void* message, size_t len);
@@ -76,8 +79,8 @@ private:
 	std::unique_ptr<Channel> channel_;
 	const InetAddress localAddr_;
 	const InetAddress peerAddr_;
-	Callback connEstabedCallback_;
-	Callback connClosedCallback_;
+	Callback connectionCallback_;
+	Callback closeCallback_;
 	MessageCallback messageCallback_;
 	
 	Buffer inputBuffer_;

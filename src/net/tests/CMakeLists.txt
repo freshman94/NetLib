@@ -9,3 +9,18 @@ target_link_libraries(EventLoopThreadPool_test NetLib_net)
 
 add_executable(TcpServer_test TcpServer_test.cc)
 target_link_libraries(TcpServer_test NetLib_net)
+
+add_executable(Timestamp_test Timestamp_test.cc)
+target_link_libraries(Timestamp_test NetLib_net)
+
+add_executable(TimerQueue_test TimerQueue_test.cc)
+target_link_libraries(TimerQueue_test NetLib_net)
+
+add_executable(TcpClient_test1 TcpClient_test1.cc)
+target_link_libraries(TcpClient_test1 NetLib_net)
+
+add_executable(TcpClient_test2 TcpClient_test2.cc)
+target_link_libraries(TcpClient_test2 NetLib_net)
+
+add_executable(TcpClient_test3 TcpClient_test3.cc)
+target_link_libraries(TcpClient_test3 NetLib_net)

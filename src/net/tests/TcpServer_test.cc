@@ -15,9 +15,9 @@ class EchoServer {
 public:
 	EchoServer(EventLoop* loop, const InetAddress& listenAddr)
 		: loop_(loop),
-		server_(loop, listenAddr, numThreads, "EchoServer")
+		server_(loop, listenAddr, "EchoServer", numThreads)
 	{
-		server_.setConnEstabedCallback(
+		server_.setConnectionCallback(
 			std::bind(&EchoServer::onConnection, this, _1));
 		server_.setMessageCallback(
 			std::bind(&EchoServer::onMessage, this, _1, _2));

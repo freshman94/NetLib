@@ -2,6 +2,7 @@
 
 #include <base/Mutex.h>
 #include <base/CurrentThread.h>
+#include <net/TimerQueue.h>
 
 #include <functional>
 #include <vector>
@@ -25,6 +26,10 @@ public:
 	void queueInLoop(Functor cb);
 
 	size_t queueSize() const;
+
+	void runAt(Timestamp time, TimerCallback cb);
+	void runAfter(double delay, TimerCallback cb);
+	void runEvery(double interval, TimerCallback cb);
 
 	void wakeup();
 	void updateChannel(Channel* channel);
@@ -58,6 +63,7 @@ private:
 	bool callingPendingFunctors_;
 	const pid_t threadId_;
 	std::unique_ptr<Epoll> epoll_;
+	std::unique_ptr<TimerQueue> timerQueue_;
 	int wakeupFd_;	//eventfd,实现异步唤醒EventLoop功能
 	std::unique_ptr<Channel> wakeupChannel_;
 	boost::any context_;

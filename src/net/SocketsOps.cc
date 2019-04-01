@@ -15,7 +15,8 @@ typedef struct sockaddr SA;
 int sockets::createNonblockingOrDie(sa_family_t family){
 	int sockfd = socket(family, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
 	if (sockfd < 0)
-		LOG_FATAL << "sockets::createNonblockingOrDie";
+		LOG_FATAL << "sockets::createNonblockingOrDie"
+		<< strerror(errno) << " (errno=" << errno << ") ";
 	return sockfd;
 }
 

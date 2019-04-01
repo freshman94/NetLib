@@ -1,2 +1,5 @@
 add_executable(Thread_test Thread_test.cc)
 target_link_libraries(Thread_test NetLib_base)
+
+add_executable(Atomic_test Atomic_test.cc)
+target_link_libraries(Atomic_test NetLib_base)

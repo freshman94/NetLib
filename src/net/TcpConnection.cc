@@ -7,6 +7,16 @@
 
 #include <errno.h>
 
+void defaultConnectionCallback(const TcpConnectionPtr& conn) {
+	LOG_TRACE << conn->localAddress().toIpPort() << " -> "
+		<< conn->peerAddress().toIpPort() << " is "
+		<< (conn->connected() ? "UP" : "DOWN");
+}
+
+void defaultMessageCallback(const TcpConnectionPtr&, Buffer* buf) {
+	buf->retrieveAll();
+}
+
 TcpConnection::TcpConnection(EventLoop* loop,
 	const string& nameArg, int sockfd,
 	const InetAddress& localAddr,
@@ -30,7 +40,7 @@ TcpConnection::TcpConnection(EventLoop* loop,
 TcpConnection::~TcpConnection()
 {
 	LOG_DEBUG << "TcpConnection::dtor[" << name_ << "] at " << this
-		<< " fd=" << channel_->fd();
+		<< " fd=" << channel_->fd() << " state=" << stateToString();
 	assert(state_ == Disconnected);
 }
 
@@ -50,7 +60,8 @@ void TcpConnection::sendInLoop(const void* data, size_t len) {
 		else{
 			nwrote = 0;
 			if (errno != EWOULDBLOCK){
-				LOG_ERROR << "TcpConnection::sendInLoop";
+				LOG_ERROR << "TcpConnection::sendInLoop  " << 
+					strerror(errno) << " (errno=" << errno << ") ";
 				if (errno == EPIPE || errno == ECONNRESET)	//socket已失效
 					faultError = true;
 			}
@@ -73,22 +84,27 @@ void TcpConnection::send(const void* data, int len){
 }
 
 void TcpConnection::send(const StringPiece& message){
-	if (loop_->isInLoopThread())
-		sendInLoop(message);
-	else{
-		void (TcpConnection::*fp)(const StringPiece& message) = &TcpConnection::sendInLoop;
-		loop_->runInLoop(std::bind(fp, this, message.as_string()));
+	if (state_ == Connected) {
+		if (loop_->isInLoopThread())
+			sendInLoop(message);
+		else {
+			void (TcpConnection::*fp)(const StringPiece& message) = &TcpConnection::sendInLoop;
+			loop_->runInLoop(std::bind(fp, this, message.as_string()));
+		}
 	}
+
 }
 
 void TcpConnection::send(Buffer* buf){
-	if (loop_->isInLoopThread()){
-		sendInLoop(buf->readablePtr(), buf->readableBytes());
-		buf->retrieveAll();
-	}
-	else{
-		void (TcpConnection::*fp)(const StringPiece& message) = &TcpConnection::sendInLoop;
-		loop_->runInLoop(std::bind(fp, this, buf->retrieveAllAsString()));
+	if (state_ == Connected) {
+		if (loop_->isInLoopThread()) {
+			sendInLoop(buf->readablePtr(), buf->readableBytes());
+			buf->retrieveAll();
+		}
+		else {
+			void (TcpConnection::*fp)(const StringPiece& message) = &TcpConnection::sendInLoop;
+			loop_->runInLoop(std::bind(fp, this, buf->retrieveAllAsString()));
+		}
 	}
 }
 
@@ -105,6 +121,38 @@ void TcpConnection::shutdownInLoop(){
 		socket_->shutdownWrite();
 }
 
+
+void TcpConnection::forceClose() {
+	if (state_ == Connected || state_ == Disconnecting)
+	{
+		setState(Disconnecting);
+		loop_->queueInLoop(std::bind(&TcpConnection::forceCloseInLoop, shared_from_this()));
+	}
+}
+
+void TcpConnection::forceCloseInLoop() {
+	loop_->assertInLoopThread();
+	if (state_ == Connected || state_ == Disconnecting)
+		handleClose();
+}
+
+const char* TcpConnection::stateToString() const
+{
+	switch (state_)
+	{
+	case Disconnected:
+		return "Disconnected";
+	case Connecting:
+		return "Connecting";
+	case Connected:
+		return "Connected";
+	case Disconnecting:
+		return "Disconnecting";
+	default:
+		return "unknown state";
+	}
+}
+
 void TcpConnection::setTcpNoDelay(bool on){
 	socket_->setTcpNoDelay(on);
 }
@@ -115,8 +163,7 @@ void TcpConnection::connectEstablished(){
 	setState(Connected);
 	channel_->tie(shared_from_this());	//保活TcpConnection
 	channel_->enableReading();
-	if(connEstabedCallback_)
-		connEstabedCallback_(shared_from_this());
+	connectionCallback_(shared_from_this());
 }
 
 void TcpConnection::connectDestroyed(){
@@ -124,8 +171,7 @@ void TcpConnection::connectDestroyed(){
 	if (state_ == Connected){
 		setState(Disconnected);
 		channel_->disableAll();
-		if(connClosedCallback_)
-			connClosedCallback_(shared_from_this());
+		connectionCallback_(shared_from_this());
 	}
 	channel_->remove();
 }
@@ -140,7 +186,8 @@ void TcpConnection::handleRead(){
 		handleClose();
 	else{
 		errno = savedErrno;
-		LOG_ERROR << "TcpConnection::handleRead";
+		LOG_ERROR << "TcpConnection::handleRead"
+			<< strerror(errno) << " (errno=" << errno << ") ";
 		handleError();
 	}
 }
@@ -161,19 +208,21 @@ void TcpConnection::handleWrite(){
 			}
 		}
 		else
-			LOG_ERROR << "TcpConnection::handleWrite";
+			LOG_ERROR << "TcpConnection::handleWrite"
+			<< strerror(errno) << " (errno=" << errno << ") ";
 	}
 }
 
 void TcpConnection::handleClose(){
 	loop_->assertInLoopThread();
-	LOG_TRACE << "fd = " << channel_->fd();
+	LOG_TRACE << "fd = " << channel_->fd() << " state = " << stateToString();
 	assert(state_ == Connected || state_ == Disconnecting);
 	setState(Disconnected);
 	channel_->disableAll();
 
-	if(connClosedCallback_)
-		connClosedCallback_(shared_from_this());
+	TcpConnectionPtr guardThis(shared_from_this());
+	connectionCallback_(guardThis);
+	closeCallback_(guardThis);
 }
 
 void TcpConnection::handleError(){

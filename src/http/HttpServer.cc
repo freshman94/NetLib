@@ -12,11 +12,11 @@ void defaultHttpCallback(const HttpRequest&, HttpResponse* resp) {
 
 
 HttpServer::HttpServer(EventLoop* loop, const InetAddress& listenAddr,
-	int numThreads, const string& name)
-	: server_(loop, listenAddr, numThreads, name),
+	const string& name, int numThreads)
+	: server_(loop, listenAddr, name, numThreads),
 	httpCallback_(defaultHttpCallback)
 {
-	server_.setConnEstabedCallback(
+	server_.setConnectionCallback(
 		std::bind(&HttpServer::onConnection, this, _1));
 	server_.setMessageCallback(
 		std::bind(&HttpServer::onMessage, this, _1, _2));

@@ -7,19 +7,11 @@
 
 #include <stdio.h>  // snprintf
 
-
-void defaultConnEstabedCallback(const TcpConnectionPtr& conn) {
-	LOG_TRACE << conn->localAddress().toIpPort() << " -> "
-		<< conn->peerAddress().toIpPort() << " is "
-		<< (conn->connected() ? "UP" : "DOWN");
-}
-
-void defaultMessageCallback(const TcpConnectionPtr&, Buffer* buf){
-	buf->retrieveAll();
-}
+extern void defaultConnectionCallback(const TcpConnectionPtr& conn);
+extern void defaultMessageCallback(const TcpConnectionPtr&, Buffer* buf);
 
 TcpServer::TcpServer(EventLoop* loop,const InetAddress& listenAddr,
-	int numThreads, const string& nameArg)
+	 const string& nameArg, int numThreads)
 	: loop_(loop),
 	ipPort_(listenAddr.toIpPort()),
 	name_(nameArg),
@@ -28,14 +20,14 @@ TcpServer::TcpServer(EventLoop* loop,const InetAddress& listenAddr,
 	listenSocket_(sockets::createNonblockingOrDie(listenAddr.family())),
 	listenChannel_(loop, listenSocket_.fd()),
 	threadPool_(new EventLoopThreadPool(loop, name_, numThreads)),
-	connEstabedCallback_(defaultConnEstabedCallback),
+	connectionCallback_(defaultConnectionCallback),
 	messageCallback_(defaultMessageCallback),
-	nextConnId_(0)
+	nextConnId_(1)
 {
 	listenSocket_.setReuseAddr(true);
 	listenSocket_.setReusePort(true);
 	listenSocket_.bindAddress(listenAddr);
-	listenChannel_.setReadCallback(std::bind(&TcpServer::ReadCallback, this));
+	listenChannel_.setReadCallback(std::bind(&TcpServer::handleRead, this));
 	setNewConnectionCallback(std::bind(&TcpServer::newConnection, this, _1, _2));
 }
 
@@ -66,14 +58,23 @@ void TcpServer::listen(){
 	listenChannel_.enableReading();
 }
 
-void TcpServer::ReadCallback(){
+void TcpServer::handleRead(){
 	loop_->assertInLoopThread();
 	InetAddress peerAddr;
 	int connfd = listenSocket_.accept(&peerAddr);
 	if (connfd >= 0)
-		newConnectionCallback_(connfd, peerAddr);
+	{
+		if (newConnectionCallback_)
+		{
+			newConnectionCallback_(connfd, peerAddr);
+		}
+		else
+		{
+			sockets::close(connfd);
+		}
+	}
 	else
-		LOG_ERROR << "in TcpServer::ReadCallback";
+		LOG_ERROR << "in TcpServer::handleRead";
 }
 
 
@@ -92,9 +93,9 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr){
 	TcpConnectionPtr conn(new TcpConnection(ioLoop,connName,
 		sockfd,localAddr,peerAddr));
 	connections_[connName] = conn;
-	conn->setConnEstabedCallback(connEstabedCallback_);
+	conn->setConnectionCallback(connectionCallback_);
 	conn->setMessageCallback(messageCallback_);
-	conn->setConnClosedCallback(std::bind(&TcpServer::removeConnection, this, _1));
+	conn->setCloseCallback(std::bind(&TcpServer::removeConnection, this, _1));
 	ioLoop->runInLoop(std::bind(&TcpConnection::connectEstablished, conn));
 }
 

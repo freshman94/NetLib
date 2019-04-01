@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 		numThreads = atoi(argv[1]);
 	}
 	EventLoop loop;
-	HttpServer server(&loop, InetAddress("192.168.6.115", 8000), numThreads, "dummy");
+	HttpServer server(&loop, InetAddress("192.168.6.115", 8000), "dummy", numThreads);
 	server.setHttpCallback(onRequest);
 	server.start();
 	loop.loop();
