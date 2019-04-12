@@ -34,13 +34,15 @@ NetLib采用cmake来build system，安装方法为：
 
 `sudo apt-get install cmake`
 
-
+<br>
 
 NetLib 依赖于Boost，安装方法为：
 
 `sudo apt-get install libboost-dev libboost-test-dev`
 
+<br>
 
+现在可以编译NetLib库了
 
 `./build.sh`
 
