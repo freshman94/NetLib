@@ -30,6 +30,18 @@
 
 ## Build
 
+NetLib采用cmake来build system，安装方法为：
+
+`sudo apt-get install cmake`
+
+
+
+NetLib 依赖于Boost，安装方法为：
+
+`sudo apt-get install libboost-dev libboost-test-dev`
+
+
+
 `./build.sh`
 
 会在当前目录生成build文件夹，可执行文件在build/release/bin目录下，库文件在build/release/lib目录下
