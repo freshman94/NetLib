@@ -20,6 +20,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
+find_package(Boost REQUIRED)
 
 set(SRC_LIST "log" "base" "net" "http")
 
