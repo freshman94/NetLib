@@ -1,0 +1,78 @@
+Bufsize: 16384 Threads: 1 Sessions: 100
+2019-04-01 10:51:43 INFO  pid = 2910, tid = 2910 - client.cc:164
+2019-04-01 10:51:43 WARN  all connected - client.cc:89
+2019-04-01 10:53:23 WARN  stop - client.cc:123
+2019-04-01 10:53:23 WARN  all disconnected - client.cc:96
+2019-04-01 10:53:23 WARN  220269772800 total bytes read - client.cc:105
+2019-04-01 10:53:23 WARN  13444200 total messages read - client.cc:106
+2019-04-01 10:53:23 WARN  16384 average message size - client.cc:107
+2019-04-01 10:53:23 WARN  2100.65625 MiB/s throughput - client.cc:109
+Bufsize: 16384 Threads: 2 Sessions: 100
+2019-04-01 10:53:29 INFO  pid = 2948, tid = 2948 - client.cc:164
+2019-04-01 10:53:29 WARN  all connected - client.cc:89
+2019-04-01 10:55:09 WARN  stop - client.cc:123
+2019-04-01 10:55:09 WARN  all disconnected - client.cc:96
+2019-04-01 10:55:09 WARN  332146458624 total bytes read - client.cc:105
+2019-04-01 10:55:09 WARN  20272611 total messages read - client.cc:106
+2019-04-01 10:55:09 WARN  16384 average message size - client.cc:107
+2019-04-01 10:55:09 WARN  3167.59546875 MiB/s throughput - client.cc:109
+2019-04-01 10:55:09 FATAL EventLoop::abortNotInLoopThread - EventLoop 0x206BF00 was created in threadId_ = 0, current thread id = 2949 - EventLoop.cc:179
+Bufsize: 16384 Threads: 3 Sessions: 100
+2019-04-01 10:55:15 INFO  pid = 2963, tid = 2963 - client.cc:164
+2019-04-01 10:55:15 WARN  all connected - client.cc:89
+2019-04-01 10:56:55 WARN  stop - client.cc:123
+2019-04-01 10:56:55 WARN  all disconnected - client.cc:96
+2019-04-01 10:56:55 WARN  403878068224 total bytes read - client.cc:105
+2019-04-01 10:56:55 WARN  24650761 total messages read - client.cc:106
+2019-04-01 10:56:55 WARN  16384 average message size - client.cc:107
+2019-04-01 10:56:55 WARN  3851.68140625 MiB/s throughput - client.cc:109
+2019-04-01 10:56:55 FATAL EventLoop::abortNotInLoopThread - EventLoop 0x484DE9 was created in threadId_ = -326940589, current thread id = 2965 - EventLoop.cc:179
+Bufsize: 16384 Threads: 4 Sessions: 100
+2019-04-01 10:57:01 INFO  pid = 3003, tid = 3003 - client.cc:164
+2019-04-01 10:57:01 WARN  all connected - client.cc:89
+2019-04-01 10:58:41 WARN  stop - client.cc:123
+2019-04-01 10:58:41 WARN  all disconnected - client.cc:96
+2019-04-01 10:58:41 WARN  417382350848 total bytes read - client.cc:105
+2019-04-01 10:58:41 WARN  25474997 total messages read - client.cc:106
+2019-04-01 10:58:41 WARN  16384 average message size - client.cc:107
+2019-04-01 10:58:41 WARN  3980.46828125 MiB/s throughput - client.cc:109
+Bufsize: 16384 Threads: 1 Sessions: 1000
+2019-04-01 10:58:47 INFO  pid = 3018, tid = 3018 - client.cc:164
+2019-04-01 10:58:47 WARN  all connected - client.cc:89
+2019-04-01 11:00:27 WARN  stop - client.cc:123
+2019-04-01 11:00:27 WARN  all disconnected - client.cc:96
+2019-04-01 11:00:27 WARN  109469728768 total bytes read - client.cc:105
+2019-04-01 11:00:27 WARN  6681502 total messages read - client.cc:106
+2019-04-01 11:00:27 WARN  16384 average message size - client.cc:107
+2019-04-01 11:00:27 WARN  1043.9846875 MiB/s throughput - client.cc:109
+Bufsize: 16384 Threads: 2 Sessions: 1000
+2019-04-01 11:00:33 INFO  pid = 3038, tid = 3038 - client.cc:164
+2019-04-01 11:00:34 WARN  all connected - client.cc:89
+2019-04-01 11:02:13 WARN  stop - client.cc:123
+2019-04-01 11:02:13 WARN  all disconnected - client.cc:96
+2019-04-01 11:02:13 WARN  121146933248 total bytes read - client.cc:105
+2019-04-01 11:02:13 WARN  7394228 total messages read - client.cc:106
+2019-04-01 11:02:13 WARN  16383.9867053 average message size - client.cc:107
+2019-04-01 11:02:13 WARN  1155.3471875 MiB/s throughput - client.cc:109
+2019-04-01 11:02:13 FATAL EventLoop::abortNotInLoopThread - EventLoop 0x484DE9 was created in threadId_ = -326940589, current thread id = 3039 - EventLoop.cc:179
+Bufsize: 16384 Threads: 3 Sessions: 1000
+2019-04-01 11:02:19 INFO  pid = 3061, tid = 3061 - client.cc:164
+2019-04-01 11:02:20 WARN  all connected - client.cc:89
+2019-04-01 11:03:59 WARN  stop - client.cc:123
+2019-04-01 11:03:59 WARN  all disconnected - client.cc:96
+2019-04-01 11:03:59 WARN  121487736832 total bytes read - client.cc:105
+2019-04-01 11:03:59 WARN  7415038 total messages read - client.cc:106
+2019-04-01 11:03:59 WARN  16383.9668565 average message size - client.cc:107
+2019-04-01 11:03:59 WARN  1158.59734375 MiB/s throughput - client.cc:109
+2019-04-01 11:03:59 FATAL EventLoop::abortNotInLoopThread - EventLoop 0x484DE9 was created in threadId_ = -326940589, current thread id = 3062 - EventLoop.cc:179
+2019-04-01 11:03:59 FATAL EventLoop::abortNotInLoopThread - EventLoop 0x16803E0 was created in threadId_ = 0, current thread id = 3064 - EventLoop.cc:179
+Bufsize: 16384 Threads: 4 Sessions: 1000
+2019-04-01 11:04:05 INFO  pid = 3079, tid = 3079 - client.cc:164
+2019-04-01 11:04:08 WARN  all connected - client.cc:89
+2019-04-01 11:05:45 WARN  stop - client.cc:123
+2019-04-01 11:05:45 WARN  all disconnected - client.cc:96
+2019-04-01 11:05:45 WARN  114796150784 total bytes read - client.cc:105
+2019-04-01 11:05:45 WARN  7006601 total messages read - client.cc:106
+2019-04-01 11:05:45 WARN  16384 average message size - client.cc:107
+2019-04-01 11:05:45 WARN  1094.78140625 MiB/s throughput - client.cc:109
+2019-04-01 11:05:45 FATAL EventLoop::abortNotInLoopThread - EventLoop 0x484DE9 was created in threadId_ = -326940589, current thread id = 3083 - EventLoop.cc:179

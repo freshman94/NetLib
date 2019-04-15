@@ -18,9 +18,15 @@ message(STATUS "CXXFLAGS: " ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_${BUILD_TYP
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
+find_package(Boost REQUIRED)
+find_package(Protobuf)
+
+include_directories(${Boost_INCLUDE_DIRS})
+
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
-find_package(Boost REQUIRED)
+
+
 
 set(SRC_LIST "log" "base" "net" "http")
 
@@ -37,6 +43,13 @@ add_subdirectory(src/base/tests)
 add_subdirectory(src/log/tests)
 add_subdirectory(src/net/tests)
 add_subdirectory(src/http)
-
 add_subdirectory(bench/pingpong)
+
+if(PROTOBUF_FOUND)
+  add_subdirectory(protobuf)
+else()
+  add_subdirectory(protobuf EXCLUDE_FROM_ALL)
+endif()
+
+
 	

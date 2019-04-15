@@ -20,6 +20,9 @@ typedef std::shared_ptr<TcpConnection> TcpConnectionPtr;
 typedef std::function<void(const TcpConnectionPtr&)> Callback;
 typedef std::function<void(const TcpConnectionPtr&, Buffer*)> MessageCallback;
 
+using std::placeholders::_1;
+using std::placeholders::_2;
+
 class TcpConnection : noncopyable,
 	public std::enable_shared_from_this<TcpConnection>{
 public:

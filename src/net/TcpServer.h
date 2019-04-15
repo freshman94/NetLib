@@ -8,8 +8,6 @@
 class EventLoop;
 class EventLoopThreadPool;
 
-using std::placeholders::_1;
-using std::placeholders::_2;
 
 class TcpServer : noncopyable{
 public:
