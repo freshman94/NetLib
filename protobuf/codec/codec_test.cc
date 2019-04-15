@@ -22,7 +22,7 @@ void testQuery()
 {
   NetLib::Query query;
   query.set_id(1);
-  query.set_questioner("Chen Shuo");
+  query.set_questioner("DJH");
   query.add_question("Running?");
 
   Buffer buf;
@@ -47,7 +47,7 @@ void testAnswer()
 {
   NetLib::Answer answer;
   answer.set_id(1);
-  answer.set_questioner("Chen Shuo");
+  answer.set_questioner("DJH");
   answer.set_answerer("blog.csdn.net/Solstice");
   answer.add_solution("Jump!");
   answer.add_solution("Win!");
@@ -201,7 +201,7 @@ void testOnMessage()
 {
   NetLib::Query query;
   query.set_id(1);
-  query.set_questioner("Chen Shuo");
+  query.set_questioner("DJH");
   query.add_question("Running?");
 
   Buffer buf1;
