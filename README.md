@@ -42,6 +42,12 @@ NetLib 依赖于Boost，安装方法为：
 
 <br>
 
+NetLib 有一个非必需的库：Google Protobuf，用于将Protobuf应用于网络编程中，安装方法为：
+
+`sudo apt-get install protobuf-compiler libprotobuf-dev`
+
+<br>
+
 现在可以编译NetLib库了
 
 `./build.sh`
